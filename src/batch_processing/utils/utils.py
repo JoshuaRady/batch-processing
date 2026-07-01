@@ -835,8 +835,12 @@ def update_config(
     """
     config_data = read_json_file(path)
     for key, val in IO_PATHS.items():
-        if key == "restart_from" and scenario_continuation:
-            config_data["IO"][key] = f"{prefix_value}/output/restart-tr.nc"
+        if key == "restart_from":
+            if scenario_continuation:
+                config_data["IO"][key] = f"{prefix_value}/output/restart-tr.nc"
+            else:
+                #Prevent blank values from being replaced with the prefix path alone:
+                config_data["IO"][key] = ""
         else:
             config_data["IO"][key] = f"{prefix_value}/{val}"
     if restart_from is not None:
