@@ -836,17 +836,16 @@ def update_config(
     config_data = read_json_file(path)
     for key, val in IO_PATHS.items():
         if key == "restart_from":
-            print("Changing restart_from:")#Temp debugging.
             if scenario_continuation:
-                print("scenario_continuation...")#Temp debugging.
+                #Set restart file to default location:
                 config_data["IO"][key] = f"{prefix_value}/output/restart-tr.nc"
             else:
                 #Prevent blank values from being replaced with the prefix path alone:
-                print("else...")#Temp debugging.
                 config_data["IO"][key] = ""
         else:
             config_data["IO"][key] = f"{prefix_value}/{val}"
     if restart_from is not None:
+        #If the restart path is passed in use that instead:
         config_data["IO"]["restart_from"] = restart_from
 
     write_json_file(path, config_data)
