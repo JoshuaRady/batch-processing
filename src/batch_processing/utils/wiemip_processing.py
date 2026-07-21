@@ -262,7 +262,9 @@ def filter_dataset_to_cropped_mask(
     for var_name in ds_work.data_vars:
         var_da = ds_work[var_name]
         if ds_row_dim in var_da.dims and ds_col_dim in var_da.dims:
-            out_ds[var_name] = var_da.where(active_mask)
+            #Failing to specify the fill value for inactive cells results in NANs and in implicit
+            #cast to double.  Setting other=0 should preserve integer variables:
+            out_ds[var_name] = var_da.where(active_mask, other=0)
         else:
             out_ds[var_name] = var_da
     return out_ds
